@@ -55,7 +55,6 @@ export const introLinks = [
 ]
 
 export const footerLinks = [
-  // Replace '#' with a real contact link (mailto:, etc.)
-  { label: 'Get in touch', href: '#' },
   { label: 'GitHub', href: 'https://github.com/abhijeetsagr-g/' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/abhijeet-sagar-gilead/' },
 ]
