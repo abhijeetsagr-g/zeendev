@@ -1,19 +1,7 @@
 import { useTypewriter } from '../hooks/useTypewriter.js'
-import { projects, statusMeta } from '../data/projects.js'
 
-const countsByStatus = Object.fromEntries(
-  Object.keys(statusMeta).map((status) => [
-    status,
-    projects.filter((project) => project.status === status).length,
-  ]),
-)
 
-const summary = Object.entries(statusMeta)
-  .filter(([status]) => countsByStatus[status] > 0)
-  .map(([status]) => `${countsByStatus[status]} ${status}`)
-  .join(' · ')
-
-const statusLine = `${summary} — open to a Flutter internship`
+const statusLine = `looking for an internship`
 
 export function Status() {
   const { text, done } = useTypewriter(statusLine)

@@ -14,7 +14,7 @@ export const projects = [
     name: 'Gamypad',
     href: 'https://github.com/abhijeetsagr-g/gamypad',
     status: 'live',
-    badge: { tone: 'live', label: 'Get It On GitHub' },
+    badge: { tone: 'live', label: 'Get it on GitHub' },
     description:
       'Turns a phone into a wireless gamepad for a Linux PC: dual joysticks, full button mapping, QR-code pairing, and a watchdog that catches disconnects. Flutter app talking UDP to a native Linux companion.',
     meta: ['Flutter', 'Linux / uinput', 'Open source'],
@@ -36,7 +36,7 @@ export const projects = [
     name: 'Spotirip',
     href: 'https://github.com/abhijeetsagr-g/spotirip-downloads/releases/tag/v1',
     status: 'live',
-    badge: { tone: 'live', label: 'Get It On GitHub' },
+    badge: { tone: 'live', label: 'Get it on GitHub' },
     description:
       'Search up tracks, then download them with correct tags and artwork sourced from the iTunes API!',
     meta: ['Flutter', 'Android', 'Metatagger'],
@@ -51,12 +51,11 @@ export const statusMeta = {
 }
 
 export const introLinks = [
-  // Replace '#' with real URLs
-  { label: 'Resume', href: '#' },
   { label: 'GitHub', href: 'https://github.com/abhijeetsagr-g/' },
 ]
 
 export const footerLinks = [
   // Replace '#' with a real contact link (mailto:, etc.)
   { label: 'Get in touch', href: '#' },
+  { label: 'GitHub', href: 'https://github.com/abhijeetsagr-g/' },
 ]
