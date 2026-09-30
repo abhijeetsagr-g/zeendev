@@ -4,7 +4,9 @@ import { ScrollProgress } from './components/ScrollProgress.jsx'
 import { Intro } from './components/Intro.jsx'
 import { ProjectEntry } from './components/ProjectEntry.jsx'
 import { Footer } from './components/Footer.jsx'
+import { ProjectDetail } from './pages/ProjectDetail.jsx'
 import { projects, statusMeta } from './data/projects.js'
+import { useHashRoute } from './hooks/useHashRoute.js'
 
 const FILTERS = [
   { value: 'all', label: 'All' },
@@ -14,7 +16,7 @@ const FILTERS = [
   })),
 ]
 
-function App() {
+function BuildLog() {
   const [filter, setFilter] = useState('all')
 
   const visible =
@@ -74,6 +76,16 @@ function App() {
         <Footer />
       </div>
     </>
+  )
+}
+
+function App() {
+  const route = useHashRoute()
+
+  return route.name === 'project' ? (
+    <ProjectDetail id={route.id} />
+  ) : (
+    <BuildLog />
   )
 }
 

@@ -25,6 +25,10 @@
   --steel: #6f7da2;
   --steel-bright: #93a1c6;
   --line: #333031;
+  /* card edge — the one hairline colour, shared by the log cards and the
+     detail page so both screens are built from the same border */
+  --edge: rgba(240, 235, 225, 0.09);
+  --edge-hi: rgba(111, 125, 162, 0.5);
   --sans: 'Iosevka', ui-monospace, 'SF Mono', Menlo, monospace;
   --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
 }
@@ -191,12 +195,20 @@ h1 em {
   color: var(--steel-bright);
 }
 
-.sub {
+.sub,
+.pd-lede {
   color: var(--paper-dim);
   font-size: 0.95rem;
   line-height: 1.75;
   max-width: 54ch;
+}
+
+.sub {
   margin: 0;
+}
+
+.pd-lede {
+  margin: 0 0 2rem;
 }
 
 .sub a {
@@ -212,7 +224,10 @@ h1 em {
 }
 
 /* ---- log ----------------------------------------------------------------- */
-.log-bar {
+/* `.log-bar` is the site's one bar treatment: a rule with a small label on the
+   left and controls on the right. The detail page reuses it as its header. */
+.log-bar,
+.pd-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -223,7 +238,12 @@ h1 em {
   margin-bottom: 0.4rem;
 }
 
-.log-title {
+.log-bar {
+  grid-column: 1 / -1;
+}
+
+.log-title,
+.pd-crumbs {
   font-size: 0.72rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -238,28 +258,40 @@ h1 em {
   flex-wrap: wrap;
 }
 
-.filter {
+/* the one pill: filter chips, the detail status badge and the action buttons
+   are all the same control at different weights */
+.filter,
+.pd-btn,
+.pd-status {
   appearance: none;
   border: 1px solid var(--line);
   background: transparent;
   color: var(--paper-dim);
   font: inherit;
   font-size: 0.72rem;
-  padding: 0.3rem 0.65rem;
+  line-height: 1.6;
+  padding: 0.3rem 0.8rem;
   border-radius: 999px;
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  white-space: nowrap;
+  text-decoration: none;
   transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
 
-.filter:hover {
+.filter {
+  cursor: pointer;
+}
+
+.filter:hover,
+.pd-btn:hover {
   color: var(--paper);
   border-color: var(--paper-faint);
 }
 
-.filter:focus-visible {
+.filter:focus-visible,
+.pd-btn:focus-visible {
   outline: 2px solid var(--steel-bright);
   outline-offset: 2px;
 }
@@ -270,7 +302,8 @@ h1 em {
   transition: color 0.15s ease;
 }
 
-.filter.active.live {
+.filter.active.live,
+.pd-status.live {
   background: rgba(111, 125, 162, 0.18);
   border-color: var(--steel);
   color: var(--steel);
@@ -281,7 +314,10 @@ h1 em {
 }
 
 .filter.active.building,
-.filter.active.in-progress {
+.filter.active.in-progress,
+.pd-status.building,
+.pd-status.in-progress,
+.pd-btn.primary {
   background: rgba(147, 161, 198, 0.16);
   border-color: var(--steel-bright);
   color: var(--steel-bright);
@@ -309,13 +345,13 @@ h1 em {
   gap: 1rem;
   padding: 1.9rem;
   background: transparent;
-  border: 1px solid rgba(240, 235, 225, 0.09);
+  border: 1px solid var(--edge);
   border-radius: 4px;
   transition: border-color 0.2s ease;
 }
 
 .entry:hover {
-  border-color: rgba(111, 125, 162, 0.5);
+  border-color: var(--edge-hi);
 }
 
 .entry:hover .entry-name a {
@@ -335,6 +371,9 @@ h1 em {
   font-size: 1.3rem;
   line-height: 1.25;
   margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
 }
 
 .entry-name a {
@@ -362,12 +401,22 @@ h1 em {
   color: var(--steel-bright);
 }
 
-.entry-desc {
+/* the log's card copy, shared with the detail page's paragraphs so long-form
+   text reads at the same size, colour and measure as the cards */
+.entry-desc,
+.pd-body {
   color: var(--paper-dim);
   font-size: 0.9rem;
   line-height: 1.65;
-  margin: 0;
   max-width: 70ch;
+}
+
+.entry-desc {
+  margin: 0;
+}
+
+.pd-body {
+  margin: 0 0 1rem;
 }
 
 .entry-meta {
@@ -400,8 +449,9 @@ h1 em {
 }
 
 /* ---- footer ---------------------------------------------------------------- */
-.footer {
-  margin-top: 6rem;
+/* the detail page's prev/next bar is the same footer, closer in */
+.footer,
+.pd-foot {
   padding-top: 1.6rem;
   border-top: 1px solid var(--line);
   font-size: 0.78rem;
@@ -413,21 +463,330 @@ h1 em {
   flex-wrap: wrap;
 }
 
+.footer {
+  margin-top: 6rem;
+}
+
+.pd-foot {
+  margin-top: 3.5rem;
+}
+
 .footer-links {
   display: flex;
   gap: 1.2rem;
 }
 
-.footer a {
+.footer a,
+.pd-foot a {
   color: var(--paper);
   text-decoration: none;
   border-bottom: 1px solid var(--line);
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.footer a:hover {
+.footer a:hover,
+.pd-foot a:hover {
   color: var(--steel-bright);
   border-color: var(--steel-bright);
+}
+
+/* ---- project detail ------------------------------------------------------ */
+/* The detail page is the log, opened up. It reuses the log's bar, label, pill,
+   card border, type scale and footer rather than inventing a second set — so
+   the two screens read as one site. Only the measure changes: the column is
+   full width like `#log`, and prose/figures take their own widths inside it. */
+
+/* The project name is the page's h1, so it deliberately carries no override —
+   it is styled by the same `h1` rule as the home page title. */
+
+.pd-bar {
+  margin-bottom: 2.4rem;
+}
+
+.pd-crumbs a {
+  color: var(--paper-dim);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.pd-crumbs a:hover {
+  color: var(--steel-bright);
+}
+
+.pd-crumbs span {
+  color: var(--line);
+  margin: 0 0.5rem;
+}
+
+/* the project name is the page's h1 — see the note above `.pd-bar` */
+.pd-lede code {
+  color: var(--steel-bright);
+  font-size: 0.88em;
+}
+
+/* ---- manifest: the log's card, four times ---------------------------------- */
+.pd-manifest {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+  margin: 0 0 3rem;
+}
+
+.pd-manifest div {
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--edge);
+  border-radius: 4px;
+}
+
+.pd-manifest dt {
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--paper-faint);
+  margin: 0 0 0.4rem;
+}
+
+.pd-manifest dd {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--paper);
+}
+
+/* ---- section headers: the log-bar label, with a `##` and a rule ---------- */
+.pd-h2 {
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--paper-faint);
+  margin: 3.4rem 0 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.pd-h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.pd-h2 b {
+  color: var(--steel);
+  font-weight: 400;
+}
+
+/* ---- steps + changelog ----------------------------------------------------- */
+.pd-steps,
+.pd-log {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  border-left: 1px solid var(--line);
+  max-width: 70ch;
+}
+
+.pd-steps li,
+.pd-log li {
+  display: flex;
+  gap: 1rem;
+  padding: 0.6rem 0 0.6rem 1.1rem;
+  position: relative;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--paper-dim);
+}
+
+.pd-steps li::before,
+.pd-log li::before {
+  content: '';
+  position: absolute;
+  left: -3.5px;
+  top: 1.1rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--steel);
+}
+
+.pd-steps b,
+.pd-log b {
+  color: var(--paper);
+  font-weight: 400;
+  min-width: 9rem;
+  flex-shrink: 0;
+}
+
+.pd-log b {
+  min-width: 6.5rem;
+  font-size: 0.75rem;
+  color: var(--paper-faint);
+}
+
+/* ---- framed screenshots ---------------------------------------------------- */
+.pd-frame {
+  border: 1px solid var(--edge);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--ink-2);
+  margin: 1.4rem 0 0;
+  max-width: 60rem;
+}
+
+.pd-frame-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--ink-3);
+  font-size: 0.68rem;
+  color: var(--paper-faint);
+}
+
+.pd-frame-bar i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+  display: block;
+  flex-shrink: 0;
+}
+
+.pd-frame-bar span {
+  margin-left: 0.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pd-shot {
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(135deg, rgba(147, 161, 198, 0.09), rgba(240, 235, 225, 0.02)),
+    var(--ink-2);
+  overflow: hidden;
+}
+
+.pd-shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pd-shot-desktop {
+  aspect-ratio: 16 / 9;
+}
+.pd-shot-wide {
+  aspect-ratio: 16 / 10;
+}
+.pd-shot-ultrawide {
+  aspect-ratio: 41 / 18;
+}
+.pd-shot-standard {
+  aspect-ratio: 4 / 3;
+}
+.pd-shot-phone {
+  aspect-ratio: 9 / 20.5;
+  max-width: 18rem;
+  margin: 0 auto;
+}
+
+/* two variants of the same screen, side by side */
+.pd-shot-pair {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  align-items: stretch;
+  justify-items: stretch;
+  background: var(--line);
+}
+
+.pd-variant {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 9 / 20.5;
+  background: var(--ink-2);
+  overflow: hidden;
+}
+
+.pd-variant img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pd-variant figcaption {
+  position: absolute;
+  left: 50%;
+  bottom: 0.7rem;
+  transform: translateX(-50%);
+  padding: 0.16rem 0.55rem;
+  border: 1px solid var(--edge);
+  border-radius: 999px;
+  background: rgba(12, 11, 12, 0.72);
+  backdrop-filter: blur(4px);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  white-space: nowrap;
+}
+
+.pd-shot-ph {
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper-faint);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(240, 235, 225, 0.05) 0 1px,
+    transparent 1px 11px
+  );
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-content: center;
+}
+
+.pd-shot-ph span {
+  display: block;
+  margin-top: 0.35rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-size: 0.72rem;
+  color: var(--paper-dim);
+}
+
+.pd-frame-cap {
+  margin: 0;
+  padding: 0.5rem 0.8rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.68rem;
+  color: var(--paper-faint);
+  letter-spacing: 0.04em;
+}
+
+/* ---- actions ---------------------------------------------------------------- */
+/* `.pd-btn` is styled with `.filter` in the log section above */
+.pd-actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin: 2.8rem 0 0;
+}
+
+.pd-btn.primary:hover {
+  background: rgba(147, 161, 198, 0.24);
+  color: var(--steel-bright);
 }
 
 /* ---- responsive --------------------------------------------------------------- */
@@ -446,8 +805,29 @@ h1 em {
     padding: 1.35rem 1.4rem 1.5rem;
   }
 
-  .log-bar {
+  .log-bar,
+  .pd-bar {
     align-items: flex-start;
+  }
+
+  .pd-steps li,
+  .pd-log li {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .pd-steps b,
+  .pd-log b {
+    min-width: 0;
+  }
+
+  /* stacked portrait pairs get too small to read side by side */
+  .pd-shot-pair {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-variant {
+    aspect-ratio: 9 / 16;
   }
 }
 
